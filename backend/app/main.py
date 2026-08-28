@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import upload
+from app.routers import chat
+app.include_router(chat.router)
 
 app = FastAPI(
     title="AI Data Scientist Platform",
