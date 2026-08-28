@@ -4,6 +4,8 @@ from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
 from app.core.file_loader import load_dataframe, get_schema_summary, UnsupportedFileTypeError
+from app.core.registry import register_file
+import uuid
 
 router = APIRouter()
 
@@ -44,12 +46,13 @@ async def upload_dataset(file: UploadFile = File(...)):
     DATASET_REGISTRY[dataset_id] = str(saved_path)
 
     schema = get_schema_summary(df)
-
+    register_file(dataset_id, filepath=str(saved_path), schema_summary=schema)   # <-- ADD THIS LINE
     return {
         "dataset_id": dataset_id,
         "filename": file.filename,
         "schema": schema,
     }
+    
 
 
 @router.get("/dataset/{dataset_id}/preview")
